@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="header-section">
+    <div class="container">
+        <h1>Product Predictions</h1>
+        <p class="lead">Predict if your new products will be best sellers</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card dashboard-card">
+                <div class="card-body">
+                    <h4 class="card-title">New Prediction</h4>
+
+                    <form action="/predict" method="post">
+                        <div class="mb-3">
+                            <label for="product_count" class="form-label">Number of products to predict</label>
+                            <select id="product_count" name="product_count" class="form-select" onchange="updateProductFields()">
+                                {% for i in range(1, 11) %}
+                                <option value="{{ i }}" {% if product_count == i %}selected{% endif %}>{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div id="product_fields">
+                            {% for i in range(1, product_count + 1) %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Product {{ i }}</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="sales_{{ i }}" class="form-label">Sales</label>
+                                                <input type="number" class="form-control" id="sales_{{ i }}" name="sales_{{ i }}" step="0.01" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="growth_{{ i }}" class="form-label">Growth Trend (0-1)</label>
+                                                <input type="number" class="form-control" id="growth_{{ i }}" name="growth_{{ i }}" step="0.01" min="0" max="1" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Predict</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if prediction_results and prediction_results.new_products %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card dashboard-card">
+                <div class="card-body">
+                    <h4 class="card-title">Prediction Results</h4>
+
+                    <div class="table-responsive mb-4">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Sales</th>
+                                    <th>Growth Trend</th>
+                                    <th>Prediction</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i, product in enumerate(prediction_results.new_products) %}
+                                <tr>
+                                    <td>Product {{ i + 1 }}</td>
+                                    <td>{{ product.Sales }}</td>
+                                    <td>{{ product.GrowthTrend }}</td>
+                                    <td>{{ product.PredictedBestSeller }}</td>
+                                    <td>
+                                        {% if product.PredictedBestSeller == 1 %}
+                                        <span class="badge bg-success">Best Seller</span>
+                                        {% else %}
+                                        <span class="badge bg-warning">Not Best Seller</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if prediction_results.predictions_plot %}
+                    <div class="chart-container">
+                        <h4 class="chart-title">Prediction Visualization</h4>
+                        <img src="data:image/png;base64,{{ prediction_results.predictions_plot }}" class="img-fluid" alt="Predictions Plot">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function updateProductFields() {
+        const count = parseInt(document.getElementById('product_count').value);
+        window.location.href = `/predict?product_count=${count}`;
+    }
+</script>
+{% endblock %}

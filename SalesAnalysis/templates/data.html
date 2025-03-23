@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="header-section">
+    <div class="container">
+        <h1>Complete Data</h1>
+        <p class="lead">View all restaurant sales data</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card dashboard-card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    {% for key in data[0].keys() %}
+                                    <th>{{ key }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in data %}
+                                <tr>
+                                    {% for key, value in row.items() %}
+                                    <td>{{ value }}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
