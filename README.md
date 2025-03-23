@@ -10,8 +10,6 @@ python app.py
 ```
 /restaurant-sales-analysis
 ├── app.py                 # Main Flask application
-├── requirements.txt       # Dependencies
-├── README.md              # This file
 ├── restaurant_sales.csv   # Your data file (you must provide this)
 └── templates/             # HTML templates
     ├── layout.html        # Base template with navigation
