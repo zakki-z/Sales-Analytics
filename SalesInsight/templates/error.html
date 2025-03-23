@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card dashboard-card">
+                <div class="card-body text-center">
+                    <h1 class="text-danger"><i class="fas fa-exclamation-triangle"></i> Erreur</h1>
+                    <p class="lead">{{ message }}</p>
+                    <a href="/" class="btn btn-primary">Retour à l'accueil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

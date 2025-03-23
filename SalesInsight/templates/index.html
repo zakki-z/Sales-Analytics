@@ -1,0 +1,154 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="header-section">
+    <div class="container">
+        <h1>Tableau de Bord des Ventes</h1>
+        <p class="lead">Analyse et visualisation des données de vente du restaurant</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card dashboard-card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Produits Totaux</h5>
+                    <p class="metric-value">{{ data_summary.total_products }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card dashboard-card bg-success text-white">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Meilleurs Vendeurs</h5>
+                    <p class="metric-value">{{ data_summary.best_sellers }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card dashboard-card bg-warning text-dark">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Vendeurs Modérés</h5>
+                    <p class="metric-value">{{ data_summary.moderate_sellers }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card dashboard-card bg-danger text-white">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Vendeurs Faibles</h5>
+                    <p class="metric-value">{{ data_summary.low_sellers }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- More Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Ventes Moyennes</h5>
+                    <p class="metric-value">{{ data_summary.avg_sales }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Ventes Maximum</h5>
+                    <p class="metric-value">{{ data_summary.max_sales }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Ventes Minimum</h5>
+                    <p class="metric-value">{{ data_summary.min_sales }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Performance -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card dashboard-card">
+                <div class="card-body">
+                    <h4 class="card-title">Performance du Modèle</h4>
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <h5 class="metric-label">Précision</h5>
+                            <p class="metric-value">{{ model_metrics.accuracy }}%</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h5 class="metric-label">Précision (Classe 1)</h5>
+                            <p class="metric-value">{{ (model_metrics.report['1']['precision'] * 100) | round(2) }}%</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h5 class="metric-label">Rappel (Classe 1)</h5>
+                            <p class="metric-value">{{ (model_metrics.report['1']['recall'] * 100) | round(2) }}%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="chart-container">
+                <h4 class="chart-title">Distribution des Catégories de Ventes</h4>
+                <img src="data:image/png;base64,{{ distribution_plot }}" class="img-fluid" alt="Distribution Plot">
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="chart-container">
+                <h4 class="chart-title">Répartition des Ventes par Catégorie</h4>
+                <img src="data:image/png;base64,{{ category_plot }}" class="img-fluid" alt="Category Sales Plot">
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample Data Table -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card dashboard-card">
+                <div class="card-body">
+                    <h4 class="card-title">Aperçu des Données</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    {% for key in sample_data[0].keys() %}
+                                    <th>{{ key }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in sample_data %}
+                                <tr>
+                                    {% for key, value in row.items() %}
+                                    <td>{{ value }}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-end">
+                        <a href="/data" class="btn btn-primary">Voir Toutes les Données</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
